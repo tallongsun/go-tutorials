@@ -1,3 +1,23 @@
+* [Goroutine是什么？](#goroutine是什么)
+   * [Goroutine定义](#goroutine定义)
+   * [Goroutine和Thread区别](#goroutine和thread区别)
+* [Goroutine调度模型](#goroutine调度模型)
+   * [GM调度器](#gm调度器)
+   * [GMP调度器](#gmp调度器)
+* [Goroutine调度算法](#goroutine调度算法)
+   * [work-stealing](#work-stealing)
+   * [syscall](#syscall)
+   * [spining](#spining)
+   * [network poller](#network-poller)
+   * [sysmon](#sysmon)
+   * [scheduler affinity](#scheduler-affinity)
+* [Goroutine生命周期](#goroutine生命周期)
+   * [Go runtime启动](#go-runtime启动)
+   * [M创建时机](#m创建时机)
+   * [Goroutine调度](#goroutine调度)
+   * [Goroutine回收](#goroutine回收)
+* [避免高并发调用同步系统接口](#避免高并发调用同步系统接口)
+
 ## Goroutine是什么？
 ### Goroutine定义
 [Rob Pike](https://en.wikipedia.org/wiki/Rob_Pike)
@@ -105,7 +125,11 @@ P1-M1-G2
 - G 很容易创建，栈很小以及快速的上下文切换。基于这些原因，开发人员非常喜欢并使用它们。然而，一个产生许多 shortlive 的 G 的程序将花费相当长的时间来创建和销毁它们。
 - 每个 P 维护一个 freelist G，保持这个列表是本地的，这样做的好处是不使用任何锁来 push/get 一个空闲的 G。当 G 退出当前工作时，它将被 push 到这个空闲列表中。
 
-## 避免高并发调用同步系统接口
+## 使用建议
+### 生命周期的管理
+- goroutine什么时候结束
+- 如何结束goroutine
+### 避免高并发调用同步系统接口
 goroutine的实现，是通过同步来模拟异步操作。在如下操作操作不会阻塞go runtime的线程调度：
 - 网络IO
 - 锁
