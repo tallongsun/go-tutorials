@@ -84,6 +84,7 @@ Goroutine 是一个与其他 goroutines 并行运行在同一地址空间的 Go 
   - runtime.main(): 启动 sysmon 线程；启动 GC 协程；执行 init，即代码中的各种 init 函数；执行 main.main 函数	
 ### M创建时机
 <img width="272" alt="1 12" src="https://user-images.githubusercontent.com/7836739/112928402-27204b00-9149-11eb-892c-eec425ce5bbf.png">
+
 P0-M0-G1
 - main函数执行print "hello"
 - go func()创建新的goroutine
@@ -99,5 +100,6 @@ P1-M1-G2
 - g0调度确定下一个要运行的g，需要检查很多资源更耗时，约20~100us
 ### Goroutine回收
 <img width="598" alt="1 13" src="https://user-images.githubusercontent.com/7836739/112928407-2982a500-9149-11eb-979f-d5f858a01474.png">
+
 - G 很容易创建，栈很小以及快速的上下文切换。基于这些原因，开发人员非常喜欢并使用它们。然而，一个产生许多 shortlive 的 G 的程序将花费相当长的时间来创建和销毁它们。
 - 每个 P 维护一个 freelist G，保持这个列表是本地的，这样做的好处是不使用任何锁来 push/get 一个空闲的 G。当 G 退出当前工作时，它将被 push 到这个空闲列表中。
