@@ -113,6 +113,7 @@ P0-M0-G1
 - go func()创建新的goroutine
   - 检查到有空闲的P(P1->P2->P3)
   - 且当前所有M都没在spining状态(M0当前没有处于没P找P有P找G的状态，而是在执行go代码)，则唤醒或创建一个M(这里是创建M1)。
+  
 P1-M1-G2
 - 不管G2是被放到P0还是P1的队列，G2的代码这时就有可能在M1执行print "world"
 ### Goroutine调度
