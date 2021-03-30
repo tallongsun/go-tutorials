@@ -72,6 +72,7 @@ Goroutine 是一个与其他 goroutines 并行运行在同一地址空间的 Go 
 
 - 在 chan 来回通信的 goroutine 会导致频繁的 blocks，即频繁地在本地队列中重新排队。然而，由于本地队列是 FIFO 实现，如果另一个 goroutine 占用线程，unblock goroutine 不能保证尽快运行。如图，goroutine #9 在 chan 被阻塞后恢复。但是，它必须等待#2、#5和#4之后才能运行。goroutine #5将阻塞其线程，从而延迟goroutine #9，并使其面临被另一个 P 窃取的风险。
 <img width="983" alt="1 10" src="https://user-images.githubusercontent.com/7836739/112927494-a90f7480-9147-11eb-8e1f-8e8f662df76b.png">
+
 - Go 1.5 在 P 中引入了 runnext 特殊的一个字段，可以高优先级执行 unblock G。如图，goroutine #9现在被标记为下一个可运行的。这种新的优先级排序允许 goroutine 在再次被阻塞之前快速运行。这一变化对运行中的标准库产生了总体上的积极影响，提高了一些包的性能。
 ## Goroutine生命周期
 ### Go runtime启动
